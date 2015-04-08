@@ -7,9 +7,6 @@
   },
   "builders" : [{
     "type": "openstack",
-    "username": "training-admin",
-    "password": "M3tacl0ud1",
-    "provider": "http://api-trial2.client.metacloud.net:5000/v2.0",
     "flavor": "5",
     "project": "bee42ca48b64425da367424fa331ea01",
     "image_name": "coreos-java",
