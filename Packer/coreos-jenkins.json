@@ -1,0 +1,33 @@
+{
+  "variables": {
+    "openstack_user": "{{env `OS_USERNAME`}}",
+    "openstack_user_password": "{{env `OS_PASSWORD`}}",
+    "openstack_tenant": "{{env `OS_TENANT_ID`}}",
+    "openstack_auth_url": "{{env `OS_AUTH_URL`}}"
+  },
+  "builders" : [{
+    "type": "openstack",
+    "username": "training-admin",
+    "password": "M3tacl0ud1",
+    "provider": "http://api-trial2.client.metacloud.net:5000/v2.0",
+    "flavor": "5",
+    "project": "bee42ca48b64425da367424fa331ea01",
+    "image_name": "coreos-java",
+    "source_image": "bc3c7ad4-33d5-4702-a01a-b4b65b5c14a3",
+    "ssh_username": "core",
+    "region": "RegionOne"
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "inline": [
+      "sleep 30",
+      "mkdir /home/core/java",
+      "cd /home/core/java",
+      "wget -O java.tar.gz http://javadl.sun.com/webapps/download/AutoDL?BundleId=83376",
+      "tar xzvf java.tar.gz",
+      "rm java.tar.gz",
+      "rm /home/core/.bashrc",
+      "echo 'export PATH=$PATH:/home/core/java/jre1.7.0_51/bin/' > /home/core/.bashrc"
+    ]
+  }]
+}

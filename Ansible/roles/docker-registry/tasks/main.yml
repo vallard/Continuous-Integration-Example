@@ -1,0 +1,20 @@
+---
+- copy: src={{item.src}} dest={{item.dest}}
+  with_items:
+    - { src: ../files/registry.htpasswd , dest: /vol/nginx-proxy/htpasswd/ }
+    - { src: ../files/docker-registry.crt , dest: /vol/nginx-proxy/certs/ }
+    - { src: ../files/docker-registry.csr , dest: /vol/nginx-proxy/certs/ }
+    - { src: ../files/docker-registry.key , dest: /vol/nginx-proxy/certs/ }
+    - { src: ../files/default , dest: /vol/nginx-proxy/conf/ }
+  
+#docker run --name nginx -p 80:80 -p 443:443 -v /vol/nginx-proxy/ssl:/etc/nginx/ssl -v /vol/nginx-proxy/run/docker.sock:/tmp/docker.sock -v /vol/nginx-proxy/htpasswd:/etc/ngnx/htpasswd -d zedtux/nginx-proxy:latest
+#- name: Setup Registry Nginx frontend.
+#  docker: image="zedtux/nginx-proxy" ports=80:80,443:443 name=nginx-proxy volumes=/vol/nginx-proxy/ssl:/etc/nginx/ssl,/vol/nginx-proxy/run/docker.sock:/tmp/docker.sock,/vol/nginx-proxy/htpasswd:/etc/nginx/htpasswd env="DOCKER_HOST=tcp://0.0.0.0:2376"
+- name: Ensure NGINX proxy is up. 
+  docker: image="dockerfile/nginx" ports=80:80,443:443 name=nginx-proxy volumes=/vol/nginx-proxy/conf:/etc/nginx/sites-enabled,/vol/nginx-proxy/certs:/etc/nginx/certs,/vol/nginx-proxy/htpasswd:/etc/nginx/htpasswd
+
+
+#- name: Ensure Docker Registry is Up.
+#  docker: image="registry:latest" volumes=/vol/docker-registry:/docker env="STORAGE=local,STORAGE_PATH=/docker,HTPASSWD_FILENAME=registry,SSL_FILENAME=docker-registry,DOCKER_REGISTRY=true,VIRTUAL_HOST=registry.cfgtool.com" ports=5000:5000 name=registry
+- name: Ensure Docker Registry is up.
+  docker: image="registry:latest" volumes=/vol/docker-registry:/docker env="STORAGE=local,STORAGE_PATH=/docker" ports=5000:5000 name=registry
