@@ -18,7 +18,7 @@
       key_name: "{{ keypair }}"
       #m1.small is 5
       #m1.medium is id 1
-      flavor_id: 1 
+      flavor_id: 5 
       #auto_floating_ip: yes
       security_groups: "{{ security_group }}"
       floating_ip_pools:
